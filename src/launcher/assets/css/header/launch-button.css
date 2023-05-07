@@ -1,0 +1,37 @@
+:root {
+    --launch-green: 20, 253, 78;
+    --launch-purple: 109, 0, 252;
+    --launch-red: 252, 17, 0;
+    --launch-gray: 55, 55, 55;
+
+    --launch-color: var(--launch-gray)
+}
+
+.launch-button {
+    width: 185px;
+    height: 30px;
+    padding: 25px 70px;
+    border-radius: 10px;
+
+    background-color: rgba(var(--launch-color), 0.500);
+    text-shadow: 2px 2px #00000030;
+    
+    text-align: center;
+    -webkit-app-region: no-drag;
+
+    font-weight: 700;
+    transition: 0.3s;
+    
+    color: white;
+    cursor: pointer;
+}
+
+.launch-button:hover {
+    background-color: rgba(var(--launch-color), 0.700);
+    transform: scale(1.03);
+}
+
+.launch-button h3 {
+    margin-top: 0px;
+    font-size: 24px;
+}

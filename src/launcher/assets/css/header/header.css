@@ -1,0 +1,103 @@
+@import url(launch-button.css);
+
+header {
+    width: 100%;
+    height: 85px;
+    color: white;
+    background-color: #0F0F0F;
+    -webkit-app-region: drag;
+    display: flex;
+}
+
+header img {
+    width: 65px;
+    height: 65px;
+    padding: 12px 12px;
+}
+
+header h1 {
+    left: 15px;
+    margin-top: 30px;
+    text-shadow: 2px 2px #00000050;
+    font-weight: bold;
+    font-size: x-large;
+}
+
+header nav {
+    float: none;
+    position: absolute;
+    left: 50%;
+    top: 3%;
+    transform: translate(-50%);
+}
+
+header nav button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+
+    color: white;
+    background-color: rgb(26, 26, 26);
+    outline: 2px rgba(61, 61, 61, 0.582) solid;
+
+    padding: 20px;
+    height: 40px;
+    margin-left: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: 0.3s;
+
+    -webkit-app-region: no-drag;
+}
+
+header nav button:hover {
+    background-color: rgba(58, 58, 58, 0.788);
+    outline: 2px rgb(59, 59, 59) solid;
+}
+
+.launch-button-container {
+    float: none;
+    position: absolute;
+    left: 50%;
+    top: 18%;
+    transform: translate(-50%);
+}
+
+.right-buttons {
+    display: inline-flex;
+    position: absolute;
+    left: 89.5%;
+    top: 3%;
+}
+
+.right-buttons button {
+    margin-left: 10px;
+    background-color: rgb(26, 26, 26);
+    border-radius: 5px;
+    border: none;
+    outline: 2px rgba(61, 61, 61, 0.582) solid;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    -webkit-app-region: no-drag;
+    transition: 0.3s;
+}
+
+.right-buttons button:hover {
+    background-color: rgba(58, 58, 58, 0.788);
+    outline: 2px rgb(59, 59, 59) solid;
+}
+
+.right-buttons button.close:hover {
+    background-color: rgba(230, 61, 61, 0.788);
+    outline: 2px rgb(59, 59, 59) solid;
+}
+
+.right-buttons img {
+    margin-top: -2px;
+    margin-left: -8px;
+    width: 20px;
+    height: 20px;
+}
