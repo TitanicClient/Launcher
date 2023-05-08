@@ -11,7 +11,7 @@ autoUpdater.setFeedURL({
 })
 
 setInterval(() => {
-  autoUpdater.checkForUpdates()
+  //autoUpdater.checkForUpdates()
 }, 60000);
 
 app.on('ready', () => {

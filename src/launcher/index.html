@@ -3,8 +3,11 @@
     <head>
         <title>Titanic Client</title>
         <link href="assets/css/style.css" rel="stylesheet">
+
         <script src="assets/js/Launcher.js"></script>
         <script src="assets/js/themes/themes.js"></script>
+        <script src="assets/js/util/LaunchButtonUtil.js"></script>
+
         <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     </head>
 
@@ -12,13 +15,13 @@
         <div id="theme-override"></div>
 
         <header id="header">
-            <img src="assets/img/logo/logo-no-bg.png">
+            <img class="header-img" src="assets/img/logo/logo-no-bg.png">
 
             <nav id="nav">
-                <button>HOME</button>
-                <button>SERVERS</button>
-                <button>SETTINGS</button>
-                <button>ABOUT</button>
+                <button onclick="showPage('home')">Home</button>
+                <button onclick="showPage('servers')">Servers</button>
+                <button onclick="showPage('settings')">Settings</button>
+                <button onclick="showPage('about')">About</button>
             </nav>
 
             <div class="right-buttons">
@@ -32,8 +35,6 @@
         </header>
 
         <div class="launch-container">
-            <img src="assets/img/banner/banner.png">
-
             <div class="launch-button-container">
                 <div class="launch-button">
                     <h3 id="launch-text">
@@ -43,12 +44,30 @@
             </div>
         </div>
 
-        <div class="blog-posts-container">
-            <!-- put examples here -->
+        <div id="home">
+            <h2 class="title"><u>Changelogs</u></h2>
+            <div class="changelogs-wrapper">
+                <p id="changelogs-text">
+
+                </p>
+            </div>
+        </div>
+
+        <div id="servers">
+            <h2 class="title"><u>Servers you can connect to</u></h2>
+            <div class="servers-wrapper"></div>
+        </div>
+
+        <div id="settings">
+
+        </div>
+
+        <div id="about">
+            
         </div>
 
         <footer>
-            <h4>Titanic Client Launcher (ab606a8/v2)</h4>
+            <h4>Titanic Client (1.0.0)</h4>
             <h4 class="not-affiliated">Not affiliated with Mojang</h4>
         </footer>
     </body>

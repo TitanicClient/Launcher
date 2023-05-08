@@ -1,47 +1,21 @@
 @import url(header/header.css);
 @import url(theme/snowflakes.css);
+@import url(footer/footer.css);
 
-* {
-    font-family: 'Raleway', sans-serif;
-}
+@import url(pages/home/home.css);
+@import url(pages/servers/servers.css);
+@import url(pages/settings/settings.css);
+@import url(pages/about/about.css);
 
 body {
     background-color: #151515;
+    background:#151515 url(../img/stone.png);
     padding: 0;
     margin: 0;
     user-select: none;
+    font-family: 'Raleway', sans-serif;
 }
 
 img {
     pointer-events: none;
-}
-
-.launch-container {
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-}
-
-.launch-container img {
-    width: 100%;
-    top: 15%;
-}
-
-footer {
-    width: 100%;
-    margin-top: 381px;
-    height: 35px;
-    background-color: rgb(27, 27, 27);
-}
-
-footer h4 {
-    position: fixed;
-
-    color: rgb(87, 87, 87);
-    margin-top: 7px;
-    margin-left: 12px;
-}
-
-.not-affiliated {
-    margin-left: 82.3%;
 }

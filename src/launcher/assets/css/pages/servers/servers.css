@@ -1,0 +1,36 @@
+@import url(server.css);
+
+#servers {
+    display: none;
+}
+
+#servers .title {
+    margin-top: 7px;
+    text-align: center;
+    color: white;
+}
+
+.servers-wrapper {
+    width: 95%;
+    margin-left: 2.5%;
+    height: 380px;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.250);
+    border-radius: 10px;
+    overflow-y: scroll;
+    overflow-x: none;
+    color: white;
+}
+
+.servers-wrapper img {
+    width: auto;
+    height: 250px;
+}
+
+.servers-wrapper h1 {
+    font-size: x-large;
+}
+
+.servers-wrapper::-webkit-scrollbar {
+    width: 0px;
+}

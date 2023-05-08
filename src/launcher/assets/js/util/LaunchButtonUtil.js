@@ -1,23 +1,18 @@
 let rootStyle = document.querySelector(":root");
 let computedRoot = getComputedStyle(rootStyle);
 
-const launchGreen = rootStyle.getPropertyValue("--launch-green");
-const launchGray = rootStyle.getPropertyValue("--launch-gray");
-const launchPurple = rootStyle.getPropertyValue("--launch-purple");
-const launchRed = rootStyle.getPropertyValue("--launch-red");
+const launchGreen = computedRoot.getPropertyValue("--launch-green");
+const launchGray = computedRoot.getPropertyValue("--launch-gray");
+const launchRed = computedRoot.getPropertyValue("--launch-red");
 
 function setLaunchButtonToGreen() {
-    root.style.setProperty("--launch-color", launchGreen);
+    rootStyle.style.setProperty("--launch-color", launchGreen);
 }
 
 function setLaunchButtonToGray() {
-    root.style.setProperty("--launch-color", launchGray);
-}
-
-function setLaunchButtonToPurple() {
-    root.style.setProperty("--launch-color", launchPurple);
+    rootStyle.style.setProperty("--launch-color", launchGray);
 }
 
 function setLaunchButtonToRed() {
-    root.style.setProperty("--launch-color", launchRed);
+    rootStyle.style.setProperty("--launch-color", launchRed);
 }

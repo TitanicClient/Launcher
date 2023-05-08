@@ -1,0 +1,34 @@
+@font-face {
+    font-family: "Minecraftia";
+    src: url(../../../font/Minecraftia-Regular.ttf);
+}
+
+.server {
+    margin-top: 15px;
+    margin-left: 22%;
+    width: 599px;
+    height: 100px;
+    background-color: black;
+    outline: 2px gray solid;
+    display: flex;
+    white-space: nowrap;
+    font-family: "Minecraftia";
+}
+
+.server img {
+    margin-top: 8px;
+    margin-left: 8px;
+}
+
+.server h1 {
+    margin-left: 10px;
+    font-weight: normal;
+}
+
+.server h3 {
+    position: absolute;
+    margin-top: 50px;
+    margin-left: 102.5px;
+    font-weight: normal;
+    font-size: medium;
+}
