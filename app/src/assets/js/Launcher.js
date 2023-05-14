@@ -1,5 +1,8 @@
 const electron = require("electron");
 const showdown = require("showdown"); // converter for markdown to html
+const os = require("os");
+const fs = require("fs");
+const appdataPath = require('appdata-path');
 
 const ipc = electron.ipcRenderer;
 const DEBUG = false;
@@ -53,11 +56,12 @@ function loadServers() {
         Object.keys(version).forEach(function (serverKey) {
           var motd = truncate(version[serverKey].motd, 45); // because i cba to put on a new line rn
 
-          var serverElement = `<div class="server">
-                        <img src="https://noxiuam.cc/titanic-client/api/servers/icons/${serverKey}.png" style="height: 85px; width: 85px;">
-                        <h1>${serverKey}</h1>
-                        <h3>${motd}</h3>
-                    </div>`;
+          var serverElement = 
+          `<div class="server">
+                <img src="https://noxiuam.cc/titanic-client/api/servers/icons/${serverKey}.png" style="height: 85px; width: 85px;">
+                <h1>${serverKey}</h1>
+                <h3>${motd}</h3>
+            </div>`;
 
           document.querySelector(".servers-wrapper").innerHTML += serverElement;
         });
