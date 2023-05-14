@@ -19,7 +19,25 @@ button.launch-button {
     outline: none;
     border: none;
     cursor: pointer;
-    transition: 0.3s ease;
+    transition: 0.15s ease;
+}
+
+button.launch-button.muted {
+    width: 25%;
+    background-color: #6a6a6a;
+}
+
+button.launch-button.muted:hover {
+    background-color: #6a6a6a;
+}
+
+button.launch-button.error {
+    width: 25%;
+    background-color: #aa2020;
+}
+
+button.launch-button.error:hover {
+    background-color: #c72c2c;
 }
 
 button.launch-button:hover {

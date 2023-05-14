@@ -32,6 +32,10 @@ if (!fs.existsSync(nativesPath)) {
 }
 
 function testLaunch() {
+    var launchButton = document.querySelector('.launch-button');
+    launchButton.classList.add('muted');
+    launchButton.innerHTML = 'Launching...';
+    
     var parameters = [
         "-Djava.library.path=" + nativesPath,
         "-jar " + clientJar,
@@ -51,19 +55,28 @@ function testLaunch() {
     
     process.on('exit', function () {
         running = false;
+        launchButton.classList.remove('muted');
+        launchButton.innerHTML = 'Launch';
     });
 
     process.on('disconnect', function () {
         running = false;
+        launchButton.classList.remove('muted');
+        launchButton.innerHTML = 'Launch';
     });
 
     process.on('close', function () {
         running = false;
+        launchButton.classList.remove('muted');
+        launchButton.innerHTML = 'Launch';
     });
     
     process.on('error', function (error) {
         process.kill();
         console.log('Got error from child: ' + error);
+        launchButton.classList.remove('muted');
+        launchButton.classList.add('error');
+        launchButton.innerHTML = 'Crashed';
     });
     
     process.on('message', function (m) {
