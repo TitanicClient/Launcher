@@ -8,10 +8,9 @@
     <script src="assets/js/themes/themes.js"></script>
     <script src="assets/js/util/LaunchButtonUtil.js"></script>
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-      rel="stylesheet"
-    />
+    <script src="https://kit.fontawesome.com/018f5d4b94.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
   </head>
 
   <body onload="onLoad()">
@@ -29,12 +28,18 @@
           Settings
         </button>
         <button class="nav-button" onclick="showPage('about')">About</button>
-        <button class="link-button" onclick="loadLink('https://discord.gg/Q3YBDerR2k')">
+        <button
+          class="link-button"
+          onclick="loadLink('https://discord.gg/Q3YBDerR2k')"
+        >
           <img src="assets/img/icons/discord.svg" />
         </button>
-        <button class="link-button" onclick="loadLink('https://github.com/TitanicClient')">
-            <img src="assets/img/icons/github.svg" />
-          </button>
+        <button
+          class="link-button"
+          onclick="loadLink('https://github.com/TitanicClient')"
+        >
+          <img src="assets/img/icons/github.svg" />
+        </button>
       </nav>
     </header>
 
@@ -48,13 +53,34 @@
       <div class="servers-wrapper"></div>
     </div>
 
-    <div id="settings"></div>
+    <div id="settings">
+      <h1>Settings</h1>
+    </div>
 
-    <div id="about"></div>
+    <div id="about">
+      <h1>About</h1>
+    </div>
 
     <footer>
-      <h4>Titanic Client (1.0.0)</h4>
+      <button class="launch-button">Launch</button>
       <h4 class="not-affiliated">Not affiliated with Mojang</h4>
     </footer>
+
+    <div id="launch-template" style="display: none;">
+      <i style="margin-right: 3px;" class="fa-solid fa-gamepad"></i> Launch 
+    </div>
+
+    <script>
+      const launchtemplate = document.getElementById('launch-template');
+
+      tippy('.launch-button', {
+        followCursor: true,
+        content: launchtemplate.innerHTML + '<strong>' + 'b1.1_02' + '<strong>',
+        theme: 'dark',
+        arrow: false,
+        allowHTML: true,
+        offset: [70, -3]
+      });
+    </script>
   </body>
 </html>

@@ -52,3 +52,16 @@ img {
 ::-webkit-scrollbar-thumb:hover {
   background: #797979;
 }
+
+.tippy-box[data-theme~='dark'] {
+  display: flex;
+  font-family: var(--fontRoboto);
+  background-color: #161616e5;
+  font-size: 0.9rem;
+  border-radius: 0;
+  border: 1px solid #2c2c2c;
+  font-weight: 400;
+  color: #a1a1a1; 
+  transition: 0.15s ease;
+  backdrop-filter: blur(1rem);
+}

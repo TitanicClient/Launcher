@@ -11,14 +11,16 @@
 }
 
 .servers-wrapper {
-    width: 95%;
-    margin-left: 2.5%;
-    height: 380px;
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.250);
-    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 90%;
+    margin: 0 5vw 0;
+    height: calc(100vh - 127px);
+    background-color: rgba(0, 0, 0, 0.25);
+    display: inline-flex;
     overflow-y: scroll;
-    overflow-x: none;
+    overflow-x: hidden;
     color: white;
 }
 

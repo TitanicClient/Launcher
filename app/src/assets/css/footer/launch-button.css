@@ -1,0 +1,27 @@
+button.launch-button {
+    font-family: var(--fontRoboto);
+    position: absolute;
+    bottom: 9.5px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+    height: 55px;
+    background: none;
+    background-color: #1a5ec3;
+    font-size: 1.45rem;
+    color: #ffffff;
+    text-shadow: 2px 2px 0 rgb(0 0 0 / 20%);
+    font-weight: 500;
+    border-radius: 0.15em;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+button.launch-button:hover {
+    background-color: #1969e1;
+}
