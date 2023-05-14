@@ -4,7 +4,6 @@
   "description": "Titanic Client Launcher",
   "main": "app/src/main.js",
   "scripts": {
-    "dev": "electron .",
     "start": "electron ."
   },
   "author": "Noxiuam",

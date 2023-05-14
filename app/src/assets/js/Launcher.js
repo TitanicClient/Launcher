@@ -15,6 +15,10 @@ function sendToIPC(message) {
     ipc.send(message);
 }
 
+function loadLink(link) {
+    electron.shell.openExternal(link);
+  }
+
 function showPage(page) {
     var pages = [
         "home",

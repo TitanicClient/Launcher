@@ -1,4 +1,5 @@
 let mainWindow;
+let loadingWindow;
 
 const { app, BrowserWindow, dialog, ipcMain } = require('electron')
 const { autoUpdater } = require('electron-updater')
@@ -40,34 +41,60 @@ autoUpdater.on('error', message => {
 
 app.on('ready', () => {
   
-    mainWindow = new BrowserWindow({
-        width: 1175,
-        height: 700,
-        'minWidth': 1175,
-        'minHeight': 700,
-        webPreferences: {
-            nodeIntegration: true,
-            enableRemoteModule: true,
-            contextIsolation: false,
-        },
-        menubar: false,
-        center: true,
-        titleBarStyle: false,
-        frame: true,
-        show: true,
-        resizable: true,
-        fullscreen: false,
-        icon: "./launcher/assets/img/logo/logo-no-bg.png",
-        title: "Titanic Client",
-    });
+  // Create the loading window
+  loadingWindow = new BrowserWindow({
+    width: 400,
+    height: 500,
+    'backgroundColor': '#111111',
+    resizable: false,
+    center: true,
+    frame: false,
+    alwaysOnTop: false,
+    show: false,
+    webPreferences: {
+      nodeIntegration: true,
+      enableRemoteModule: true,
+      contextIsolation: false,
+    },
+  });
 
-    mainWindow.setMenuBarVisibility(false)
-    
-    mainWindow.loadURL(`file://${__dirname}/index.html`);
+  loadingWindow.loadURL(`file://${__dirname}/loading.html`);
 
-    mainWindow.once('ready-to-show', () => {
-      mainWindow.show();
-    });
+  // Create the main window
+  mainWindow = new BrowserWindow({
+    width: 1175,
+    height: 700,
+    'minWidth': 1175,
+    'minHeight': 700,
+    'backgroundColor': '#111111',
+    webPreferences: {
+      nodeIntegration: true,
+      enableRemoteModule: true,
+      contextIsolation: false,
+    },
+    menubar: false,
+    center: true,
+    titleBarStyle: false,
+    frame: true,
+    show: false,
+    resizable: true,
+    fullscreen: false,
+    icon: "./launcher/assets/img/logo/logo-no-bg.png",
+    title: "Titanic Client",
+  });
+
+  mainWindow.setMenuBarVisibility(false)
+
+  // Load the main window content
+  mainWindow.loadURL(`file://${__dirname}/index.html`);
+
+  // Show the loading window
+  loadingWindow.show();
+
+  setTimeout(() => {
+    loadingWindow.close();
+    mainWindow.show();
+  }, 3200);
 });
 
 ipcMain.on('minimize', function() {

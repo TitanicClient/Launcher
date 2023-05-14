@@ -33,7 +33,7 @@ header nav {
     gap: 1px;
 }
 
-header nav button {
+header nav button.nav-button {
     font-family: var(--fontRoboto);
 
     display: inline-flex;
@@ -54,6 +54,33 @@ header nav button {
     transition: width 0.3s ease-in-out, background-color 0.1s ease-in-out;
 
     -webkit-app-region: no-drag;
+}
+
+header nav button.link-button {
+    font-family: var(--fontRoboto);
+
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+
+    background-color: #1a1a1a;
+    box-shadow: -1px -1px 0 #303030 inset;
+
+    padding: 0 10px;
+    width: 8vh;
+    height: 40px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: width 0.3s ease-in-out, background-color 0.1s ease-in-out;
+
+    -webkit-app-region: no-drag;
+}
+
+header nav button.link-button img {
+    width: 18px;
+    filter: brightness(0.8);
 }
 
 header nav button:hover {

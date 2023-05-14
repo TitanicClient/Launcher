@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Titanic Client</title>
+  </head>
+
+  <style>
+    html {
+      background-color: #111111;
+    }
+
+    @keyframes fade {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes scale {
+      from {
+        transform: scale(0.75);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes progress {
+      0% {
+        width: 0;
+        float: left;
+      }
+      20% {
+        width: 100%;
+        float: center;
+      }
+      40% {
+        width: 0;
+        float: right;
+      }
+      60% {
+        width: 0;
+        float: left;
+      }
+      80% {
+        width: 100%;
+        float: center;
+      }
+      100% {
+        width: 0;
+        float: right;
+      }
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      background-color: #111111;
+      padding: 0;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      width: 100%;
+      height: 100vh;
+      -webkit-app-region: drag;
+      animation: fade 0.75s ease forwards;
+    }
+
+    h2 {
+      transform: scale(0);
+      opacity: 0;
+      font-weight: 500;
+      color: gray;
+      animation-delay: 0.5s;
+      animation: scale 0.35s ease forwards;
+    }
+
+    div#progress {
+      position: absolute;
+      overflow: hidden;
+      bottom: 0;
+      height: 5px;
+      transform: translateY(-8px);
+      width: calc(100% - 20px);
+      border-radius: 99rem;
+    }
+
+    div.line {
+      height: 100%;
+      background-color: #1471FF;
+      border-radius: 99rem;
+      animation: progress 3s linear forwards;
+    }
+  </style>
+
+  <body>
+    <div id="progress">
+      <div class="line"></div>
+    </div>
+    <h2>Welcome</h2>
+  </body>
+</html>
