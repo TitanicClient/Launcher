@@ -1,0 +1,44 @@
+#home {
+  display: block;
+}
+
+#home .title {
+  margin-top: 7px;
+  text-align: center;
+  color: white;
+}
+
+.changelogs-wrapper {
+  width: 95%;
+  margin-left: 2.5%;
+  height: 80vh;
+  background-color: rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  display: inline-flex;
+  overflow-y: scroll;
+  overflow-x: none;
+  color: white;
+}
+
+#changelogs-text {
+  padding: 15px;
+  padding-top: -15px;
+}
+
+.changelogs-wrapper img {
+  width: auto;
+  height: 250px;
+}
+
+.changelogs-wrapper h1 {
+    color: rgb(59, 114, 232);
+}
+
+.changelogs-wrapper h1:not(:first-child) {
+  margin-top: 50px;
+  font-size: x-large;
+}
+
+.changelogs-wrapper::-webkit-scrollbar {
+  width: 0px;
+}

@@ -1,0 +1,28 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&display=swap");
+
+@import url(header/header.css);
+@import url(theme/snowflakes.css);
+@import url(footer/footer.css);
+
+@import url(pages/home/home.css);
+@import url(pages/servers/servers.css);
+@import url(pages/settings/settings.css);
+@import url(pages/about/about.css);
+
+:root {
+    --fontRaleway: 'Raleway', sans-serif;
+    --fontRoboto: 'Roboto', sans-serif;
+}
+
+body {
+  background-color: #151515;
+  background: #151515 url(../img/stone.png);
+  padding: 0;
+  margin: 0;
+  user-select: none;
+  font-family: var(--fontRoboto)
+}
+
+img {
+  pointer-events: none;
+}

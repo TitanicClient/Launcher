@@ -1,0 +1,67 @@
+@import url(launch-button.css);
+@import url(launch-container.css);
+
+header {
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    height: 50px;
+    color: white;
+    image-rendering: pixelated;
+    background-position-y: center;
+    background-size: 10%;
+    background-image: url('../../img/background/stone-fade.png');
+    background-color: linear-gradient(0, #1b1b1b 0%, #111111 100%);
+    border-bottom: 2px solid #0e0e0e;
+    -webkit-app-region: drag;
+    display: flex; 
+}
+
+.header-img {
+    image-rendering: initial;
+    width: auto;
+    margin: 11px 20px;
+    height: 25px;
+}
+
+header nav {
+    position: relative;
+    overflow: hidden;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+    display: flex;
+    gap: 1px;
+}
+
+header nav button {
+    font-family: var(--fontRoboto);
+
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+
+    color: #bfbfbf;
+    background-color: #1a1a1a;
+    box-shadow: -1px -1px 0 #303030 inset;
+
+    padding: 0 20px;
+    width: 15vh;
+    height: 40px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: width 0.3s ease-in-out, background-color 0.1s ease-in-out;
+
+    -webkit-app-region: no-drag;
+}
+
+header nav button:hover {
+    background-image: url('../../img/background/dirt-transparent.png');
+    background-color: #202020;
+}
+
+header nav button:active {
+    transform: translateY(2px);
+    background-color: #292929;
+}
