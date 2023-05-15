@@ -1,7 +1,5 @@
 const electron = require("electron");
 const showdown = require("showdown"); // converter for markdown to html
-const os = require("os");
-const fs = require("fs");
 const appdataPath = require('appdata-path');
 
 const ipc = electron.ipcRenderer;

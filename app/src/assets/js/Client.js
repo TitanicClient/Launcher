@@ -1,99 +1,154 @@
 const child = require("child_process");
 const unzipper = require("unzipper");
 const path = require("path");
+const os = require("os");
+const fs = require("fs");
 
-const defaultMinecraftPath = appdataPath(".minecraft");
-const titanicPath = os.homedir() + "\\.titanicclient";
+const titanicPath = path.join(os.homedir(), ".titanicclient");
+const selectedVersion = "a1.2.6";
 
-var selectedVersion = "a1.2.6";
-
-const jrePath = titanicPath + `\\jre`;
-const versionsPath = titanicPath + "\\versions";
-const currentVersionPath = versionsPath + "\\" + selectedVersion;
-const nativesPath = `${versionsPath}\\${selectedVersion}\\natives`;
+const jrePath = path.join(titanicPath, "jre");
+const versionsPath = path.join(titanicPath, "versions");
+const currentVersionPath = path.join(versionsPath, selectedVersion);
+const nativesPath = path.join(currentVersionPath, "natives");
 
 if (!fs.existsSync(titanicPath)) {
-  fs.mkdirSync(titanicPath);
+  // Create necessary directories
+  createDirectories([
+    titanicPath,
+    versionsPath,
+    currentVersionPath,
+    jrePath,
+    nativesPath,
+  ]);
+
+  // Install required files
+  installFiles();
 }
 
-if (!fs.existsSync(versionsPath)) {
-  fs.mkdirSync(versionsPath);
+function createDirectories(dirs) {
+  dirs.forEach((dir) => {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
+  });
 }
 
-if (!fs.existsSync(currentVersionPath)) {
-  fs.mkdirSync(currentVersionPath);
+async function fetchJson(url) {
+  const response = await fetch(url);
+  return response.json();
 }
 
-if (!fs.existsSync(jrePath)) {
-  fs.mkdirSync(jrePath);
+function setButtonStatus(button, text, muted) {
+  button.innerHTML = text;
+  button.classList[muted ? "add" : "remove"]("muted");
 }
 
-if (!fs.existsSync(nativesPath)) {
-  fs.mkdirSync(nativesPath);
+function handleProcessEvents(button, buttonText) {
+  setButtonStatus(button, buttonText, true);
 }
 
-async function launch() {
-  var launchButton = document.querySelector(".launch-button");
-  launchButton.classList.add("muted");
-  launchButton.innerHTML = "Launching...";
+function createUpdater(url, filePath, extractPath, isZip) {
+  return {
+    url,
+    filePath,
+    extractPath,
+    isZip,
+    async update() {
+      if (!(await this.needsUpdate())) return false;
+      await this.download();
+      if (this.isZip) {
+        await this.extract();
+      }
+      return true;
+    },
 
-  const metadataUrl =
-    "https://noxiuam.cc/titanic-client/api/launch/metadata.json";
+    async needsUpdate() {
+      try {
+        const response = await fetch(this.url, { method: "HEAD" });
+        if (!response.ok) {
+          throw new Error(`${response.status} ${response.statusText}`);
+        }
+        const remoteSize = response.headers.get("content-length");
+        if (!fs.existsSync(this.filePath)) {
+          return true;
+        }
+        const localSize = fs.statSync(this.filePath).size;
+        return remoteSize !== localSize;
+      } catch (error) {
+        console.error(`Error checking update for ${this.filePath}: ${error}`);
+        return false;
+      }
+    },
+
+    async download() {
+      const response = await fetch(this.url);
+      const buffer = await response.arrayBuffer();
+      fs.writeFileSync(this.filePath, Buffer.from(buffer));
+    },
+    async extract() {
+      const stream = fs.createReadStream(this.filePath);
+      await stream.pipe(unzipper.Extract({ path: this.extractPath })).promise();
+      fs.unlinkSync(this.filePath);
+    },
+  };
+}
+
+async function installFiles() {
+  try {
+    const metadataUrl =
+      "https://noxiuam.cc/titanic-client/api/launch/metadata.json";
+    const metadata = await fetchJson(metadataUrl);
+
+    const client = createUpdater(
+      metadata[selectedVersion].clientLink,
+      path.join(currentVersionPath, `Titanic-${selectedVersion}-all.jar`)
+    );
+    const natives = createUpdater(
+      metadata[selectedVersion].nativesLink,
+      path.join(nativesPath, ".temp.zip"),
+      nativesPath,
+      true
+    );
+    const jre = createUpdater(
+      metadata.jre,
+      path.join(jrePath, ".temp.zip"),
+      jrePath,
+      true
+    );
+
+    await Promise.all([client.update(), natives.update(), jre.update()]);
+  } catch (error) {
+    console.error(`Error installing files: ${error}`);
+  }
+}
+
+async function testLaunch() {
+  const launchButton = document.querySelector(".launch-button");
+  setButtonStatus(launchButton, "Launching...", true);
 
   try {
-    const response = await fetch(metadataUrl);
-    const metadata = await response.json();
-
-    console.log("[LAUNCH] Starting launch request..");
-
-    const clientLink = metadata[selectedVersion].clientLink;
-    const clientJarPath =
-      currentVersionPath + `\\Titanic-${selectedVersion}-all.jar`;
-    const clientJarExists = fs.existsSync(clientJarPath);
-    const clientJarNeedsUpdate =
-      !clientJarExists || (await needsUpdate(clientJarPath, clientLink));
-
-    const nativesLink = metadata[selectedVersion].nativesLink;
-    const nativesPath = `${versionsPath}\\${selectedVersion}\\natives`;
-    const nativesExists = fs.existsSync(nativesPath);
-    const nativesNeedUpdate =
-      !nativesExists || (await needsUpdate(nativesPath, nativesLink));
-
-    const jreZipPath = `${jrePath}.zip`;
-    const jreExists = fs.existsSync(jrePath);
-    const jreNeedsUpdate =
-      !jreExists || (await needsUpdate(jrePath, metadata.jre));
-
-    if (clientJarNeedsUpdate) {
-      console.log("[LAUNCH] Updating client jar..");
-      launchButton.innerHTML = "Updating..";
-      await downloadFile(clientLink, clientJarPath);
+    // Check if the user does not have files
+    if (
+      !fs.existsSync(path.join(currentVersionPath, `Titanic-${selectedVersion}-all.jar`)) ||
+      !fs.existsSync(path.join(nativesPath, "lwjgl.dll")) ||
+      !fs.existsSync(path.join(jrePath, "bin", "javaw.exe"))
+    ) {
+      console.log("Missing files detected, installing...");
+      await installFiles();
     }
 
-    if (nativesNeedUpdate) {
-      console.log("[LAUNCH] Updating natives..");
-      const zipPath = `${nativesPath}.zip`;
-      await downloadFile(nativesLink, zipPath);
-      await extractZip(zipPath, nativesPath);
-      fs.unlinkSync(zipPath);
-    }
-
-    if (jreNeedsUpdate) {
-      console.log("[LAUNCH] Updating jar..");
-      launchButton.innerHTML = "Launching..";
-      await downloadFile(metadata.jre, jreZipPath);
-      await extractZip(jreZipPath, jrePath);
-      fs.unlinkSync(jreZipPath);
-    }
-
-    if (!clientJarNeedsUpdate && !nativesNeedUpdate && !jreNeedsUpdate) {
-      console.log("[LAUNCH] Starting launch process..");
-      launchButton.innerHTML = "Launching..";
-    }
+    const metadataUrl =
+      "https://noxiuam.cc/titanic-client/api/launch/metadata.json";
+    const metadata = await fetchJson(metadataUrl);
 
     var parameters = [
       "-Djava.library.path=" + nativesPath,
-      "-jar " + clientJarPath,
+      "-jar " +
+        currentVersionPath +
+        "\\Titanic-" +
+        selectedVersion +
+        "-all.jar",
       "-javaagent:" + jrePath + "\\bin\\javaw.exe",
       "HS50",
     ];
@@ -109,74 +164,25 @@ async function launch() {
 
     var process = child.exec(command);
 
-    process.on("exit", function () {
-      console.log("[LAUNCH] Closed..");
-      running = false;
-      launchButton.classList.remove("muted");
-      launchButton.innerHTML = "Launch";
+    process.on("spawn", () => {
+      setButtonStatus(launchButton, "Launched", true);
+    })
+
+    process.on("exit", () => {
+      setButtonStatus(launchButton, "Launch", false);
     });
-
-    process.on("disconnect", function () {
-      running = false;
-      launchButton.classList.remove("muted");
-      launchButton.innerHTML = "Launch";
+    process.on("disconnect", () => setButtonStatus(launchButton, "Launch", false));
+    process.on("close", () => {
+      setButtonStatus(launchButton, "Launch", false);
     });
-
-    process.on("close", function () {
-      running = false;
-      launchButton.classList.remove("muted");
-      launchButton.innerHTML = "Launch";
+    process.on("error", (error) => {
+      console.error(`Got error from child: ${error}`);
+      setButtonStatus(launchButton, "Launch", false);
     });
-
-    process.on("error", function (error) {
-      process.kill();
-      console.log("Got error from child: " + error);
-      launchButton.classList.remove("muted");
-      launchButton.innerHTML = "Crashed";
-    });
-
-    process.on("message", function (m) {
-      console.log("Got message from child: " + m);
-    });
-
-    async function needsUpdate(filePath, url) {
-      try {
-        if (!url) {
-          console.error(`URL is undefined for ${filePath}`);
-          return false;
-        }
-        const response = await fetch(url, { method: "HEAD" });
-        if (!response.ok) {
-          console.error(
-            `Error checking update for ${filePath}: ${response.status} ${response.statusText}`
-          );
-          return false;
-        }
-        const remoteSize = response.headers.get("content-length");
-        if (!fs.existsSync(filePath)) {
-          return true;
-        }
-        const localSize = fs.statSync(filePath).size;
-        return remoteSize !== localSize;
-      } catch (error) {
-        console.error(`Error checking update for ${filePath}: ${error}`);
-        return false;
-      }
-    }
-
-    async function downloadFile(url, filePath) {
-      const response = await fetch(url);
-      const buffer = await response.arrayBuffer();
-      fs.writeFileSync(filePath, Buffer.from(buffer));
-    }
-
-    async function extractZip(zipPath, extractPath) {
-      const stream = fs.createReadStream(zipPath);
-      await stream.pipe(unzipper.Extract({ path: extractPath })).promise();
-    }
   } catch (error) {
     console.error(`Error launching client: ${error}`);
-    launchButton.classList.remove("muted");
-    launchButton.innerHTML = "Launch";
+    setButtonStatus(launchButton, "Launch", false);
   }
 }
+
+testLaunch();
