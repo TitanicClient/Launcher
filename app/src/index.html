@@ -3,8 +3,7 @@
   <head>
     <title>Titanic Client</title>
     <link href="assets/css/style.css" rel="stylesheet" />
-
-    <script src="assets/js/Client.js"></script>
+    
     <script src="assets/js/Launcher.js"></script>
     <script src="assets/js/themes/themes.js"></script>
     <script src="assets/js/util/LaunchButtonUtil.js"></script>
@@ -63,16 +62,20 @@
     </div>
 
     <footer>
-      <select name="Versions" id="versions">
-        <option value="a1.2.6">a1.2.6</option>q
+      <input class="launch-username">
+      <select class="launch-versions" name="Versions" id="versions">
+        <option value="a1.2.6">a1.2.6</option>
       </select>
-      <button class="launch-button" onclick="testLaunch()">Launch</button>
+      <button class="launch-button" onclick="launchClient()">Launch</button>
       <h4 class="not-affiliated">Not affiliated with Mojang</h4>
     </footer>
 
     <div id="launch-template" style="display: none;">
       <i style="margin-right: 3px;" class="fa-solid fa-gamepad"></i> Launch 
     </div>
+
+    <!-- So, since some of the code is gay, it requires the button to be above the script. Sowwyy 👉👈 -->
+    <script src="assets/js/Client.js"></script>
 
     <script>
       const launchtemplate = document.getElementById('launch-template');

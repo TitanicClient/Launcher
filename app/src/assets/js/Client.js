@@ -5,25 +5,18 @@ const os = require("os");
 const fs = require("fs");
 
 const titanicPath = path.join(os.homedir(), ".titanicclient");
-const selectedVersion = "a1.2.6";
+let selectedVersion = "b1.1_02"; // Default version
 
 const jrePath = path.join(titanicPath, "jre");
 const versionsPath = path.join(titanicPath, "versions");
 const currentVersionPath = path.join(versionsPath, selectedVersion);
 const nativesPath = path.join(currentVersionPath, "natives");
 
-if (!fs.existsSync(titanicPath)) {
-  // Create necessary directories
-  createDirectories([
-    titanicPath,
-    versionsPath,
-    currentVersionPath,
-    jrePath,
-    nativesPath,
-  ]);
+let isClientRunning = false;
 
-  // Install required files
-  installFiles();
+if (!fs.existsSync(titanicPath)) {
+  // Create parent directory
+  fs.mkdirSync(titanicPath);
 }
 
 function createDirectories(dirs) {
@@ -42,10 +35,6 @@ async function fetchJson(url) {
 function setButtonStatus(button, text, muted) {
   button.innerHTML = text;
   button.classList[muted ? "add" : "remove"]("muted");
-}
-
-function handleProcessEvents(button, buttonText) {
-  setButtonStatus(button, buttonText, true);
 }
 
 function createUpdater(url, filePath, extractPath, isZip) {
@@ -123,66 +112,148 @@ async function installFiles() {
   }
 }
 
-async function testLaunch() {
+async function launchClient() {
+  if (isClientRunning) {
+    return;
+  }
+
   const launchButton = document.querySelector(".launch-button");
-  setButtonStatus(launchButton, "Launching...", true);
+  setButtonStatus(launchButton, "Downloading...", true);
 
   try {
-    // Check if the user does not have files
+    // Check if the user has the necessary files and directories
+    let needsInstall = false;
+    if (!fs.existsSync(titanicPath)) {
+      fs.mkdirSync(titanicPath);
+    }
     if (
-      !fs.existsSync(path.join(currentVersionPath, `Titanic-${selectedVersion}-all.jar`)) ||
+      !fs.existsSync(
+        path.join(currentVersionPath, `Titanic-${selectedVersion}-all.jar`)
+      ) ||
+      !fs.existsSync(nativesPath) ||
       !fs.existsSync(path.join(nativesPath, "lwjgl.dll")) ||
+      !fs.existsSync(jrePath) ||
       !fs.existsSync(path.join(jrePath, "bin", "javaw.exe"))
     ) {
-      console.log("Missing files detected, installing...");
+      needsInstall = true;
+      createDirectories([
+        jrePath,
+        versionsPath,
+        currentVersionPath,
+        nativesPath,
+      ]);
       await installFiles();
     }
 
-    const metadataUrl =
-      "https://noxiuam.cc/titanic-client/api/launch/metadata.json";
-    const metadata = await fetchJson(metadataUrl);
-
-    var parameters = [
-      "-Djava.library.path=" + nativesPath,
-      "-jar " +
-        currentVersionPath +
-        "\\Titanic-" +
-        selectedVersion +
-        "-all.jar",
-      "-javaagent:" + jrePath + "\\bin\\javaw.exe",
-      "HS50",
-    ];
-
-    var command = "java";
-
-    for (var index in parameters) {
-      var parameter = parameters[index];
-      command = command + " " + parameter;
+    if (needsInstall) {
+      setButtonStatus(launchButton, "Validating...", true);
+      await installFiles();
     }
 
-    console.log("command: " + command);
-
-    var process = child.exec(command);
-
-    process.on("spawn", () => {
-      setButtonStatus(launchButton, "Launched", true);
-    })
-
-    process.on("exit", () => {
+    const usernameInput = document.querySelector(".launch-username");
+    if (!usernameInput.value) {
+      alert("Please enter a username to launch the client.");
       setButtonStatus(launchButton, "Launch", false);
-    });
-    process.on("disconnect", () => setButtonStatus(launchButton, "Launch", false));
-    process.on("close", () => {
-      setButtonStatus(launchButton, "Launch", false);
-    });
-    process.on("error", (error) => {
-      console.error(`Got error from child: ${error}`);
-      setButtonStatus(launchButton, "Launch", false);
-    });
+      return;
+    }
+
+    launchGame(usernameInput.value);
   } catch (error) {
     console.error(`Error launching client: ${error}`);
     setButtonStatus(launchButton, "Launch", false);
+    isClientRunning = false;
   }
 }
 
-testLaunch();
+function launchGame(username) {
+  const launchButton = document.querySelector(".launch-button");
+  setButtonStatus(launchButton, "Launched", true);
+
+  const parameters = [
+    "-Djava.library.path=" + nativesPath,
+    "-jar " + currentVersionPath + "\\Titanic-" + selectedVersion + "-all.jar",
+    username,
+    "-javaagent:" + jrePath + "\\bin\\javaw.exe",
+  ];
+
+  const command = "java " + parameters.join(" ");
+
+  console.log("command: " + command);
+
+  const process = child.exec(command);
+
+  isClientRunning = true;
+
+  process.stdout.on("data", (data) => {
+    console.log(`[Minecraft] ${data}`);
+  });
+
+  process.stderr.on("data", (data) => {
+    console.error(`[Minecraft] ${data}`);
+  });
+
+  process.on("exit", () => {
+    setButtonStatus(launchButton, "Launch", false);
+    isClientRunning = false;
+  });
+  process.on("disconnect", () => {
+    setButtonStatus(launchButton, "Launch", false);
+    isClientRunning = false;
+  });
+  process.on("close", () => {
+    setButtonStatus(launchButton, "Launch", false);
+    isClientRunning = false;
+  });
+  process.on("error", (error) => {
+    console.error(`Got error from child: ${error}`);
+    setButtonStatus(launchButton, "Launch", false);
+    isClientRunning = false;
+  });
+}
+
+const launchButton = document.querySelector(".launch-button");
+launchButton.addEventListener("click", launchClient);
+
+async function updateVersionSelect() {
+  const metadataUrl =
+    "https://noxiuam.cc/titanic-client/api/launch/metadata.json";
+  const metadata = await fetchJson(metadataUrl);
+  const versionsSelect = document.querySelector(".launch-versions");
+  versionsSelect.innerHTML = "";
+  for (const version in metadata) {
+    if (version !== "jre") {
+      const option = document.createElement("option");
+      option.value = version;
+      option.appendChild(document.createTextNode(version));
+      versionsSelect.appendChild(option);
+    }
+    versionsSelect.value = selectedVersion;
+  }
+}
+
+async function updateVersion() {
+  selectedVersion = document.querySelector(".launch-versions").value;
+  const launchButton = document.querySelector(".launch-button");
+  setButtonStatus(launchButton, "Launch", false);
+  isClientRunning = false;
+}
+
+const versionsSelect = document.querySelector(".launch-versions");
+versionsSelect.addEventListener("change", updateVersion);
+
+(async function () {
+  await updateVersionSelect();
+  await updateVersion();
+})();
+
+module.exports = {
+  createDirectories,
+  fetchJson,
+  setButtonStatus,
+  createUpdater,
+  installFiles,
+  launchGame,
+  launchClient,
+  updateVersionSelect,
+  updateVersion,
+};

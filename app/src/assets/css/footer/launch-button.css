@@ -23,6 +23,7 @@ button.launch-button {
 }
 
 button.launch-button.muted {
+    cursor: not-allowed;
     width: 25%;
     background-color: #6a6a6a;
 }

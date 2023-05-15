@@ -94,7 +94,7 @@ app.on('ready', () => {
   setTimeout(() => {
     loadingWindow.close();
     mainWindow.show();
-  }, 3200);
+  }, 5000);
 });
 
 ipcMain.on('minimize', function() {
